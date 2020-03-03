@@ -1,0 +1,38 @@
+
+def update_connectivity_destination(network_id,key):
+
+    url = url_base + "networks/" + network_id + "/connectivityMonitoringDestinations"
+
+    destinations = [{"ip": "8.8.8.8", "description": "Google", "default": True},{"ip": "1.1.1.1", "description": "cloudflare", "default": False}]
+    payload = {
+        'destinations': destinations
+    }
+    headers = {
+    'X-Cisco-Meraki-API-Key': key
+    }
+
+    res_update_monitoring = requests.put(url, headers=headers, data=payload)
+
+    print(res_update_monitoring.status_code)
+    output = json.loads(res_update_monitoring.text)
+
+    return output
+
+org_id = get_org_details(key)[0]
+my_network_id = find_network_id('I love API',org_id,key)
+
+response = update_connectivity_destination(my_network_id,key)
+
+pprint(response)
+
+
+
+def find_network_id(network_name,org_id):
+    networks = get_org_networks(org_id)
+
+    for network in networks:
+        if network['name'] == network_name:
+            return network['id']
+            exit
+
+pprint(network_id)
